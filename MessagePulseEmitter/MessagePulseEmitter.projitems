@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e8756648-7704-42f2-b4d5-187c91f6ba20</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>MessagePulseEmitter</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)IPulseShell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessagePulseEmitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimplePulseEmitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimplePulseShell.cs" />
+  </ItemGroup>
+</Project>
