@@ -16,24 +16,28 @@ public abstract class MessagePulseEmitter<TMsg, TShell>
     protected abstract TShell PickShell(TMsg msg);
     protected abstract void Chain(TShell shell, TShell next);
 
-    protected void Load(TMsg msg, bool ignoreBreak)
+    protected bool Load(TMsg msg, bool notBreaking)
     {
         var next = PickShell(msg);
         TShell old;
 
-        if (ignoreBreak)
+        if (notBreaking)
             old = Interlocked.Exchange(ref _TopShell, next);
         else
         {
-            old = _TopShell;
+            notBreaking = (old = _TopShell) != null;
             while (old != null)
             {
                 var tmp = Interlocked.CompareExchange(ref _TopShell, next, old);
-                if (tmp == old) break;
-                old = tmp;
+                if (tmp == old)
+                    break;
+                notBreaking = (old = tmp) != null;
             }
         }
+
         Chain(old, next);
+
+        return notBreaking;
     }
     public void Break()
         => Chain(Interlocked.Exchange(ref _TopShell, null), null);
@@ -42,6 +46,7 @@ public abstract class MessagePulseEmitter<TMsg, TShell>
     {
         IPulseShell<TMsg> _Top;
         int state = 0;
+
         public Enumerator(TShell top)
         {
             _Top = top;
@@ -82,9 +87,7 @@ public abstract class MessagePulseEmitter<TMsg, TShell>
     }
 
     IEnumerator<TMsg> IEnumerable<TMsg>.GetEnumerator()
-    {
-        return new Enumerator(_TopShell);
-    }
+        => new Enumerator(_TopShell);
     IEnumerator IEnumerable.GetEnumerator()
         => ((IEnumerable<TMsg>)this).GetEnumerator();
     public IEnumerator<TMsg> GetEnumerator()

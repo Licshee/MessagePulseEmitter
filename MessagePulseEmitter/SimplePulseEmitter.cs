@@ -1,4 +1,4 @@
-﻿public sealed class SimplePulseEmitter<T>
+﻿public class SimplePulseEmitter<T>
     : MessagePulseEmitter<T, SimplePulseShell<T>>
 {
     public bool IgnoreBreak { get; }
@@ -14,6 +14,6 @@
     protected override void Chain(SimplePulseShell<T> shell, SimplePulseShell<T> next)
         => shell?.Chain(next);
 
-    public void Load(T msg)
+    public virtual bool Load(T msg)
         => Load(msg, IgnoreBreak);
 }
