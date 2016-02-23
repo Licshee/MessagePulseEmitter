@@ -9,6 +9,7 @@
     <Import_RootNamespace>MessagePulseEmitter</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IPulseShell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MessagePulseEmitter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SimplePulseEmitter.cs" />

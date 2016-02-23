@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -37,11 +38,52 @@ public abstract class MessagePulseEmitter<TMsg, TShell>
     public void Break()
         => Chain(Interlocked.Exchange(ref _TopShell, null), null);
 
+    class Enumerator : IEnumerator<TMsg>
+    {
+        IPulseShell<TMsg> _Top;
+        int state = 0;
+        public Enumerator(TShell top)
+        {
+            _Top = top;
+        }
+
+        public TMsg Current
+        {
+            get
+            {
+                if (state == 1)
+                    return _Top.Payload;
+                throw new InvalidOperationException();
+            }
+        }
+        object IEnumerator.Current => Current;
+
+        public void Dispose() { }
+
+        public bool MoveNext()
+        {
+            switch (state)
+            {
+                case 0:
+                    state = 1;
+                    goto case 1;
+                case 1:
+                    _Top = _Top.Next;
+                    return _Top != null;
+            }
+
+            throw new InvalidOperationException();
+        }
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     IEnumerator<TMsg> IEnumerable<TMsg>.GetEnumerator()
     {
-        IPulseShell<TMsg> shell = _TopShell;
-        while ((shell = shell.Next) != null)
-            yield return shell.Payload;
+        return new Enumerator(_TopShell);
     }
     IEnumerator IEnumerable.GetEnumerator()
         => ((IEnumerable<TMsg>)this).GetEnumerator();

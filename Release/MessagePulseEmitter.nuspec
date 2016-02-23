@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+    <metadata>
+        <id>MessagePulseEmitter</id>
+        <version>1.1-a</version>
+        <authors>Licshee</authors>
+        <projectUrl>https://github.com/Licshee/MessagePulseEmitter</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A tiny in-proc message-passing infrastructure.</description>
+    </metadata>
+    <files>
+        <file src="Portable\MessagePulseEmitter.dll" target="lib\MessagePulseEmitter.dll" />
+    </files>
+</package>
